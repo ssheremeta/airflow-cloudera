@@ -1,0 +1,526 @@
+{
+  "name": "AIRFLOW",
+  "label": "Airflow",
+  "description": "Apache Airflow is a platform to programmatically author, schedule, and monitor workflows",
+  "version": "1.9.0",
+  "compatibility": {
+    "cdhVersion": {
+      "min": "5.12.0"
+    }
+  },
+  "runAs": {
+    "user": "root",
+    "group": "root",
+    "principal": "airflow"
+  },
+  "inExpressWizard": false,
+  "icon": "images/icon.png",
+  "parcel": {
+    "requiredTags": [
+      "airflow"
+    ],
+    "optionalTags": [
+      "airflow-plugin"
+    ]
+  },
+  "serviceDependencies": [],
+  "commands" : [
+    {
+      "name" : "InitMetadataDBServiceCommand",
+      "label" : "Init metadata database",
+      "description" : "Init metadata database",
+      "roleName" : "AIRFLOW_WEBSERVER",
+      "roleCommand" : "InitMetadataDBCommand",
+      "runMode" : "single"
+    },
+    {
+      "name" : "InstallPythonPackagesServiceCommand",
+      "label" : "Install python packages by pip",
+      "description" : "Install python packages by pip on hosts with Airflow workers (list packages in Safety Vavle for requirements.txt)",
+      "roleName" : "AIRFLOW_WORKER",
+      "roleCommand" : "InstallPythonPackagesCommand",
+      "runMode" : "all"
+    }
+  ],
+  "hdfsDirs": [],
+  "serviceInit": {
+    "preStartSteps": [
+      {
+        "commandName" : "InitMetadataDBServiceCommand"
+      }
+    ]
+  },
+  "parameters": [
+    {
+      "name": "core__dags_folder",
+      "label": "DAGs Folder",
+      "description": "The folder where your airflow pipelines live. This path must be absolute",
+      "required": "true",
+      "type": "path",
+      "pathType": "localDataDir",
+      "default": "/home/airflow/dags",
+      "minLength": 1,
+      "configurableInWizard": "true"
+    },
+    {
+      "name": "core__plugins_folder",
+      "label": "Plugins Folder",
+      "description": "Where your Airflow plugins are stored. This path must be absolute",
+      "required": "true",
+      "type": "path",
+      "pathType": "localDataDir",
+      "default": "/home/airflow/plugins",
+      "minLength": 1,
+      "configurableInWizard": "true"
+    },
+    {
+      "name": "core__log_level",
+      "label": "Log Level",
+      "description": "Logging level",
+      "required": "true",
+      "type": "string_enum",
+      "validValues": [
+        "CRITICAL",
+        "ERROR",
+        "WARNING",
+        "INFO",
+        "DEBUG"
+      ],
+      "default": "INFO"
+    },
+    {
+      "name": "core__executor",
+      "label": "Executor",
+      "description": "The executor class that airflow should use",
+      "required": "true",
+      "type": "string_enum",
+      "validValues": [
+        "CeleryExecutor"
+      ],
+      "default": "CeleryExecutor"
+    },
+    {
+      "name": "core__metadata_conn_type",
+      "label": "Metadata DB Connection Type",
+      "description": "The SqlAlchemy database engine for connection to Metadata DB",
+      "required": "true",
+      "type": "string_enum",
+      "validValues": [
+        "mysql",
+        "postgresql",
+        "postgresql+psycopg2",
+        "oracle"
+      ],
+      "default": "postgresql+psycopg2",
+      "configurableInWizard": "true"
+    },
+    {
+      "name": "core__metadata_conn_login",
+      "label": "Metadata DB User",
+      "description": "Metadata DB User",
+      "required": "true",
+      "type": "string",
+      "default": "airflow",
+      "configurableInWizard": "true"
+    },
+    {
+      "name": "core__metadata_conn_password",
+      "label": "Metadata DB Password",
+      "description": "Metadata DB Password",
+      "required": "true",
+      "type": "password",
+      "default": "airflow_password",
+      "configurableInWizard": "true"
+    },
+    {
+      "name": "core__metadata_conn_host",
+      "label": "Metadata DB Host",
+      "description": "Metadata DB Host",
+      "required": "true",
+      "type": "string",
+      "default": "127.0.0.1",
+      "configurableInWizard": "true"
+    },
+    {
+      "name": "core__metadata_conn_port",
+      "label": "Metadata DB Port",
+      "description": "Metadata DB Port",
+      "required": "true",
+      "type": "port",
+      "default": 5432,
+      "configurableInWizard": "true"
+    },
+    {
+      "name": "core__metadata_conn_db",
+      "label": "Metadata DB Name",
+      "description": "Metadata DB Name",
+      "required": "true",
+      "type": "string",
+      "default": "airflow",
+      "configurableInWizard": "true"
+    },
+    {
+      "name": "celery__broker_url",
+      "label": "Celery Broker Url",
+      "description": "The Celery broker URL. Celery supports RabbitMQ, Redis and experimentally a sqlalchemy database. Refer to the Celery documentation for more information.",
+      "required": "true",
+      "type": "string",
+      "default": "redis://${redis_host}:6379/1",
+      "configurableInWizard": "true"
+    },
+    {
+      "name": "celery__concurrency",
+      "label": "Celery Concurrency",
+      "description": "The concurrency that will be used when starting workers with the \"airflow worker\" command. This defines the number of task instances that a worker will take, so size up your workers based on the resources on your worker box and the nature of your tasks",
+      "required": "true",
+      "type": "long",
+      "min": "1",
+      "max": "256",
+      "default": 16
+    },
+    {
+      "name": "scheduler__child_process_log_dir",
+      "label": "Scheduler Child Process Log Dir",
+      "description": "The folder where scheduler store logs of spawned processes",
+      "required": "true",
+      "type": "path",
+      "pathType": "localDataDir",
+      "default": "/home/airflow/logs/scheduler",
+      "minLength": 1,
+      "configurableInWizard": "true"
+    }
+  ],
+  "rolesWithExternalLinks" : ["AIRFLOW_WEBSERVER", "AIRFLOW_CELERY"],
+  "roles": [
+    {
+      "name": "AIRFLOW_WEBSERVER",
+      "label": "Airflow Webserver",
+      "pluralLabel": "Airflow Webservers",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [ "webserver_start" ],
+        "environmentVariables": {
+          "CORE__DAGS_FOLDER": "${core__dags_folder}",
+          "CORE__PLUGINS_FOLDER": "${core__plugins_folder}",
+          "CORE__LOG_LEVEL": "${core__log_level}",
+          "CORE__EXECUTOR": "${core__executor}",
+          "CORE__METADATA_CONN_TYPE": "${core__metadata_conn_type}",
+          "CORE__METADATA_CONN_LOGIN": "${core__metadata_conn_login}",
+          "CORE__METADATA_CONN_PASSWORD": "${core__metadata_conn_password}",
+          "CORE__METADATA_CONN_HOST": "${core__metadata_conn_host}",
+          "CORE__METADATA_CONN_PORT": "${core__metadata_conn_port}",
+          "CORE__METADATA_CONN_DB": "${core__metadata_conn_db}",
+          "WEBSERVER__WEB_SERVER_HOST": "${host}",
+          "WEBSERVER__WEB_SERVER_PORT": "${webserver__web_server_port}",
+          "CELERY__BROKER_URL": "${celery__broker_url}",
+          "CELERY__CONCURRENCY": "${celery__concurrency}",
+          "SCHEDULER__CHILD_PROCESS_LOG_DIR": "${scheduler__child_process_log_dir}"
+        }
+      },
+      "kerberosPrincipals" : [
+        {
+          "name" : "AIRFLOW_PRINCIPAL",
+          "primary" : "${principal}",
+          "instance" : "${host}"
+        }
+      ],
+      "commands" : [
+        {
+          "name" : "InitMetadataDBCommand",
+          "label" : "Init metadata database",
+          "description" : "Init metadata database",
+          "expectedExitCodes" : [0],
+          "requiredRoleState" : "stopped",
+          "commandRunner" : {
+            "program" : "scripts/control.sh",
+            "args" : [ "webserver_initdb" ],
+            "environmentVariables" : {
+              "CORE__DAGS_FOLDER": "${core__dags_folder}",
+              "CORE__PLUGINS_FOLDER": "${core__plugins_folder}",
+              "CORE__LOG_LEVEL": "${core__log_level}",
+              "CORE__EXECUTOR": "${core__executor}",
+              "CORE__METADATA_CONN_TYPE": "${core__metadata_conn_type}",
+              "CORE__METADATA_CONN_LOGIN": "${core__metadata_conn_login}",
+              "CORE__METADATA_CONN_PASSWORD": "${core__metadata_conn_password}",
+              "CORE__METADATA_CONN_HOST": "${core__metadata_conn_host}",
+              "CORE__METADATA_CONN_PORT": "${core__metadata_conn_port}",
+              "CORE__METADATA_CONN_DB": "${core__metadata_conn_db}",
+              "WEBSERVER__WEB_SERVER_HOST": "${host}",
+              "WEBSERVER__WEB_SERVER_PORT": "${webserver__web_server_port}",
+              "CELERY__BROKER_URL": "${celery__broker_url}",
+              "CELERY__CONCURRENCY": "${celery__concurrency}",
+              "SCHEDULER__CHILD_PROCESS_LOG_DIR": "${scheduler__child_process_log_dir}"
+            }
+          }
+        }
+      ],
+      "topology": {
+        "minInstances": 1,
+        "maxInstances": 1
+      },
+      "parameters": [
+        {
+          "name": "webserver__web_server_port",
+          "label": "Webserver Port",
+          "description": "The port on which to run the web server",
+          "required": "true",
+          "type": "port",
+          "default": 7777
+        }
+      ],
+      "externalLink" : {
+        "name" : "airflow_webserver_address",
+        "label" : "Webserver UI",
+        "url" : "http://${host}:${webserver__web_server_port}"
+      },
+      "configWriter": {
+        "generators": [],
+        "auxConfigGenerators": [
+          {
+            "filename": "airflow-conf/airflow-env.sh",
+            "sourceFilename": "aux/client/airflow-env.sh"
+          },
+          {
+            "filename": "airflow-conf/airflow.cfg",
+            "sourceFilename": "aux/client/airflow.cfg"
+          },
+          {
+            "filename": "airflow-conf/airflow_celery_settings.py",
+            "sourceFilename": "aux/client/airflow_celery_settings.py"
+          },
+          {
+            "filename": "airflow-conf/requirements.txt",
+            "sourceFilename": "aux/client/requirements.txt"
+          }         
+        ]
+      }
+    },
+    {
+      "name": "AIRFLOW_CELERY",
+      "label": "Airflow Celery",
+      "pluralLabel": "Airflow Celeries",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [ "celery_start" ],
+        "environmentVariables": {
+          "CORE__DAGS_FOLDER": "${core__dags_folder}",
+          "CORE__PLUGINS_FOLDER": "${core__plugins_folder}",
+          "CORE__LOG_LEVEL": "${core__log_level}",
+          "CORE__EXECUTOR": "${core__executor}",
+          "CORE__METADATA_CONN_TYPE": "${core__metadata_conn_type}",
+          "CORE__METADATA_CONN_LOGIN": "${core__metadata_conn_login}",
+          "CORE__METADATA_CONN_PASSWORD": "${core__metadata_conn_password}",
+          "CORE__METADATA_CONN_HOST": "${core__metadata_conn_host}",
+          "CORE__METADATA_CONN_PORT": "${core__metadata_conn_port}",
+          "CORE__METADATA_CONN_DB": "${core__metadata_conn_db}",
+          "CELERY__BROKER_URL": "${celery__broker_url}",
+          "CELERY__FLOWER_HOST": "${host}",
+          "CELERY__FLOWER_PORT": "${celery__flower_port}",
+          "CELERY__CONCURRENCY": "${celery__concurrency}",
+          "SCHEDULER__CHILD_PROCESS_LOG_DIR": "${scheduler__child_process_log_dir}"
+        }
+      },
+      "kerberosPrincipals" : [
+        {
+          "name" : "AIRFLOW_PRINCIPAL",
+          "primary" : "${principal}",
+          "instance" : "${host}"
+        }
+      ],
+      "commands" : [],
+      "topology": {
+        "minInstances": 1,
+        "maxInstances": 1
+      },
+      "parameters": [
+        {
+          "name": "celery__flower_port",
+          "label": "Celery Flower Port",
+          "description": "The port on which to run the flower webserver",
+          "required": "true",
+          "type": "port",
+          "default": 5555
+        }
+      ],
+      "externalLink" : {
+        "name" : "celery_flower_address",
+        "label" : "Celery Flower UI",
+        "url" : "http://${host}:${celery__flower_port}"
+      },
+      "configWriter": {
+        "generators": [],
+        "auxConfigGenerators": [
+          {
+            "filename": "airflow-conf/airflow-env.sh",
+            "sourceFilename": "aux/client/airflow-env.sh"
+          },
+          {
+            "filename": "airflow-conf/airflow.cfg",
+            "sourceFilename": "aux/client/airflow.cfg"
+          },
+          {
+            "filename": "airflow-conf/airflow_celery_settings.py",
+            "sourceFilename": "aux/client/airflow_celery_settings.py"
+          },
+          {
+            "filename": "airflow-conf/requirements.txt",
+            "sourceFilename": "aux/client/requirements.txt"
+          }        
+        ]
+      }
+    },
+    {
+      "name": "AIRFLOW_WORKER",
+      "label": "Airflow Worker",
+      "pluralLabel": "Airflow Workers",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [ "worker_start" ],
+        "environmentVariables": {
+          "CORE__DAGS_FOLDER": "${core__dags_folder}",
+          "CORE__PLUGINS_FOLDER": "${core__plugins_folder}",
+          "CORE__LOG_LEVEL": "${core__log_level}",
+          "CORE__EXECUTOR": "${core__executor}",
+          "CORE__METADATA_CONN_TYPE": "${core__metadata_conn_type}",
+          "CORE__METADATA_CONN_LOGIN": "${core__metadata_conn_login}",
+          "CORE__METADATA_CONN_PASSWORD": "${core__metadata_conn_password}",
+          "CORE__METADATA_CONN_HOST": "${core__metadata_conn_host}",
+          "CORE__METADATA_CONN_PORT": "${core__metadata_conn_port}",
+          "CORE__METADATA_CONN_DB": "${core__metadata_conn_db}",
+          "CELERY__BROKER_URL": "${celery__broker_url}",
+          "CELERY__CONCURRENCY": "${celery__concurrency}",
+          "SCHEDULER__CHILD_PROCESS_LOG_DIR": "${scheduler__child_process_log_dir}",
+          "WORKER__QUEUE": "${worker__queue}"
+        }
+      },
+      "kerberosPrincipals" : [
+        {
+          "name" : "AIRFLOW_PRINCIPAL",
+          "primary" : "${principal}",
+          "instance" : "${host}"
+        }
+      ],
+      "commands" : [
+        {
+          "name" : "InstallPythonPackagesCommand",
+          "label" : "Install python packages by pip",
+          "description" : "Install python packages by pip (list packages in Safety Vavle for requirements.txt)",
+          "expectedExitCodes" : [0],
+          "requiredRoleState" : "running",
+          "commandRunner" : {
+            "program" : "scripts/control.sh",
+            "args" : [ "worker_pip_install" ]
+          }
+        }
+      ],
+      "topology": {
+        "minInstances": 1
+      },
+      "parameters": [
+        {
+          "name": "worker__queue",
+          "label": "Worker Queue",
+          "description": "The queue that worker listen on.",
+          "required": "true",
+          "type": "string",
+          "default": "default"
+        }
+      ],
+      "configWriter": {
+        "generators": [],
+        "auxConfigGenerators": [
+          {
+            "filename": "airflow-conf/airflow-env.sh",
+            "sourceFilename": "aux/client/airflow-env.sh"
+          },
+          {
+            "filename": "airflow-conf/airflow.cfg",
+            "sourceFilename": "aux/client/airflow.cfg"
+          },
+          {
+            "filename": "airflow-conf/airflow_celery_settings.py",
+            "sourceFilename": "aux/client/airflow_celery_settings.py"
+          },
+          {
+            "filename": "airflow-conf/requirements.txt",
+            "sourceFilename": "aux/client/requirements.txt"
+          }   
+        ]
+      }
+    },
+    {
+      "name": "AIRFLOW_SCHEDULER",
+      "label": "Airflow Scheduler",
+      "pluralLabel": "Airflow Schedulers",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [ "scheduler_start" ],
+        "environmentVariables": {
+          "CORE__DAGS_FOLDER": "${core__dags_folder}",
+          "CORE__PLUGINS_FOLDER": "${core__plugins_folder}",
+          "CORE__LOG_LEVEL": "${core__log_level}",
+          "CORE__EXECUTOR": "${core__executor}",
+          "CORE__METADATA_CONN_TYPE": "${core__metadata_conn_type}",
+          "CORE__METADATA_CONN_LOGIN": "${core__metadata_conn_login}",
+          "CORE__METADATA_CONN_PASSWORD": "${core__metadata_conn_password}",
+          "CORE__METADATA_CONN_HOST": "${core__metadata_conn_host}",
+          "CORE__METADATA_CONN_PORT": "${core__metadata_conn_port}",
+          "CORE__METADATA_CONN_DB": "${core__metadata_conn_db}",
+          "CELERY__BROKER_URL": "${celery__broker_url}",
+          "CELERY__CONCURRENCY": "${celery__concurrency}",
+          "SCHEDULER__CHILD_PROCESS_LOG_DIR": "${scheduler__child_process_log_dir}",
+          "SCHEDULER__MAX_THREADS": "${scheduler__max_threads}"
+        }
+      },
+      "kerberosPrincipals" : [
+        {
+          "name" : "AIRFLOW_PRINCIPAL",
+          "primary" : "${principal}",
+          "instance" : "${host}"
+        }
+      ],
+      "commands" : [],
+      "topology": {
+        "minInstances": 1,
+        "maxInstances": 1
+      },
+      "parameters": [
+        {
+          "name": "scheduler__max_threads",
+          "label": "Scheduler Max Threads",
+          "description": "The scheduler can run multiple threads in parallel to schedule dags. This defines how many threads will run.",
+          "required": "true",
+          "type": "long",
+          "min": "1",
+          "max": "16",
+          "default": 2
+        }
+      ],
+      "configWriter": {
+        "generators": [],
+        "auxConfigGenerators": [
+          {
+            "filename": "airflow-conf/airflow-env.sh",
+            "sourceFilename": "aux/client/airflow-env.sh"
+          },
+          {
+            "filename": "airflow-conf/airflow.cfg",
+            "sourceFilename": "aux/client/airflow.cfg"
+          },
+          {
+            "filename": "airflow-conf/airflow_celery_settings.py",
+            "sourceFilename": "aux/client/airflow_celery_settings.py"
+          },
+          {
+            "filename": "airflow-conf/requirements.txt",
+            "sourceFilename": "aux/client/requirements.txt"
+          }          
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "name": "AIRFLOW",
+  "version": "%AIRFLOW_VERSION%",
+  "setActiveSymlink": true,
+
+  "provides": [
+    "airflow"
+  ],
+
+  "replaces": "",
+  "conflicts": "",
+
+  "scripts": {
+    "defines": "airflow_env.sh"
+  },
+  "groups": [
+    "airflow"
+  ],
+  "users": {
+    "zeppelin": {
+      "longname": "airflow",
+      "home": "/home/airflow",
+      "shell": "/bin/bash",
+      "extra_groups": [ "airflow" ]
+    }
+  },
+  "packages": [
+    {
+      "name": "airflow",
+      "version": "%AIRFLOW_VERSION%"
+    },
+    {
+      "name": "anaconda",
+      "version": "%ANACONDA_VERSION%"
+    }
+  ],
+  "components": []
+}
+
+
+

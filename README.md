@@ -88,7 +88,7 @@ Let's say I have 16 hosts in my cluster
 ```bash
 for i in {1..16};do ssh -o StrictHostKeyChecking=no ubuntu@10.10.30.$i sudo rm -rf /opt/cloudera/parcels/.flood/; done
 for i in {1..16};do ssh -o StrictHostKeyChecking=no ubuntu@10.10.30.$i sudo rm -rf /opt/cloudera/parcel-cache; done
-for i in {1..16};do ssh -o StrictHostKeyChecking=no ubuntu@10.10.30.$i sudo service cloudera-scm-agent start; done
+for i in {1..16};do ssh -o StrictHostKeyChecking=no ubuntu@10.10.30.$i sudo service cloudera-scm-agent restart; done
 ```
 
 The goal here is to clear out files that appear to be causing trouble for the download.  When we start the agent, it should detect it needs to start the download again.

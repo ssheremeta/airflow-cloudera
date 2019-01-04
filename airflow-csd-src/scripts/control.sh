@@ -2,7 +2,6 @@
 
 set -ex
 
-useradd airflow -g airflow -m -s /bin/bash
 chmod u+x $CONF_DIR/scripts/*.sh
 chown -R airflow: $CONF_DIR/logs
 chown -R airflow: $CONF_DIR/airflow-conf

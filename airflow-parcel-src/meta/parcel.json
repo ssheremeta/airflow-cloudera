@@ -18,7 +18,7 @@
     "airflow"
   ],
   "users": {
-    "zeppelin": {
+    "airflow": {
       "longname": "airflow",
       "home": "/home/airflow",
       "shell": "/bin/bash",

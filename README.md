@@ -18,8 +18,6 @@ sudo apt-get install libmysqlclient-dev
 sudo apt-get install libkrb5-dev
 sudo apt-get install libsasl2-dev
 sudo apt-get install openjdk-8-jdk-headless
-
-sudo useradd airflow -g airflow -m -s /bin/bash
 ```
 
 ## Build
@@ -30,10 +28,10 @@ To build the CSDs and Parcels yourself, you can run the build script:
 #Installation and upgrading requires setting SLUGIFY_USES_TEXT_UNIDECODE=yes
 export SLUGIFY_USES_TEXT_UNIDECODE=yes
 #Build the Parcel files, this make take some time
-sh build.sh parcel
+. build.sh parcel
 
 #Build the CSDs
-sh build.sh csd
+. build.sh csd
 ```
 
 ## Installation

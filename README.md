@@ -9,6 +9,15 @@ There are used Anaconda3 v5.1.0 and Airflow v1.9.
 
 This has been tested on CDH 5.12.0.
 
+## Prerequisites
+
+```bash
+
+sudo apt install maven
+sudo apt-get install libmysqlclient-dev
+sudo apt-get install libkrb5-dev
+```
+
 ## Build
 
 To build the CSDs and Parcels yourself, you can run the build script:

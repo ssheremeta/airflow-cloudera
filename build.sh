@@ -17,7 +17,7 @@ anaconda_folder="Anaconda3-${ANACONDA_VERSION}"
 
 
 airflow_parcel_folder="AIRFLOW-${AIRFLOW_VERSION}"
-airflow_parcel_name="${airflow_parcel_folder}-el7.parcel"
+airflow_parcel_name="${airflow_parcel_folder}-xenial.parcel"
 airflow_built_folder="${airflow_parcel_folder}_build"
 
 function build_cm_ext {
@@ -52,14 +52,13 @@ function get_anaconda_with_airflow {
   fi
   
   echo " -- Installing python packages"
-  PATH=$anaconda_prefix/$anaconda_folder/bin:$PATH
-  pip install apache-airflow[all]=="$AIRFLOW_VERSION"
-  pip install kerberos
-  pip install hdfs
-  pip install celery[redis]==3.1.17
-  pip install flower
-  pip install flask-bcrypt
-  /usr/bin/yes | pip uninstall snakebite
+  $anaconda_prefix/$anaconda_folder/bin/pip install apache-airflow[all]=="$AIRFLOW_VERSION"
+  $anaconda_prefix/$anaconda_folder/bin/pip install kerberos
+  $anaconda_prefix/$anaconda_folder/bin/pip install hdfs
+  $anaconda_prefix/$anaconda_folder/bin/pip install celery[redis]==3.1.17
+  $anaconda_prefix/$anaconda_folder/bin/pip install flower
+  $anaconda_prefix/$anaconda_folder/bin/pip install flask-bcrypt
+  /usr/bin/yes | $anaconda_prefix/$anaconda_folder/bin/pip uninstall snakebite
 
   echo " -- Clearing installed python executables"  
   set +e

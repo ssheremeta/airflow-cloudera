@@ -2,13 +2,13 @@
 set -x
 set -e
 
-CM_EXT_BRANCH=cm5-5.12.0
+CM_EXT_BRANCH=cm5-5.14.0
 
 ANACONDA_URL=https://repo.anaconda.com/archive/Anaconda3-5.1.0-Linux-x86_64.sh
 ANACONDA_MD5="966406059cf7ed89cc82eb475ba506e5" # from https://docs.anaconda.com/anaconda/install/hashes/Anaconda3-5.1.0-Linux-x86_64.sh-hash
 ANACONDA_VERSION=5.1.0
 
-AIRFLOW_VERSION=1.9.0
+AIRFLOW_VERSION=1.10.1
 
 
 anaconda_installer="$( basename $ANACONDA_URL )"

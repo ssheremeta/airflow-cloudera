@@ -22,7 +22,8 @@ export AIRFLOW_CONFIG="$AIRFLOW_HOME/airflow.cfg"
 if [[ -e $AIRFLOW_HOME/airflow-env.sh ]]; then
     source $AIRFLOW_HOME/airflow-env.sh
 fi
-export PYTHONPATH=$PYTHONPATH:$AIRFLOW_HOME
+export PYTHONPATH=$PYTHONPATH:$AIRFLOW_CONDA_HOME
+export PATH=$PATH:$AIRFLOW_CONDA_HOME
 
 
 case ${SERVICE} in

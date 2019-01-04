@@ -44,10 +44,11 @@ To verify the path to use, click `Administration > Settings`. In the navigation 
 
 ```bash
 
+# Copy CSD
 sudo cp AIRFLOW-1.10.1.jar /opt/cloudera/csd
 sudo chown cloudera-scm:cloudera-scm /opt/cloudera/csd/AIRFLOW-1.10.1.jar
 
-
+# Copy parcels
 sha1sum AIRFLOW-1.10.1_build/AIRFLOW-1.10.1-xenial.parcel | cut -d ' ' -f 1 > AIRFLOW-1.10.1_build/AIRFLOW-1.10.1-xenial.parcel.sha
 sudo cp -rf AIRFLOW-1.10.1_build/AIRFLOW-1.10.1-xenial.parcel /opt/cloudera/parcel-repo/AIRFLOW-1.10.1-xenial.parcel
 sudo cp -rf AIRFLOW-1.10.1_build/AIRFLOW-1.10.1-xenial.parcel.sha /opt/cloudera/parcel-repo/AIRFLOW-1.10.1-xenial.parcel.sha
@@ -76,17 +77,18 @@ To activate the Airflow parcel, click Activate.
 More Information about installing custom services can be found at [here](https://www.cloudera.com/documentation/enterprise/latest/topics/cm_mc_addon_services.html#concept_kpt_spj_bn__section_upv_nqj_bn).
 
 
-## Misc
+## Troubleshoot
 
 ### 1. Clear cloudera parcel cache
 
+I wanted to update the Airflow parcel, so I completely removed the parcel from the cluster via the parcel page in Cloudera Manager. But with an updated content,  when I distributed the parcel I noticed that the content of the parcel still contains the content from the old version instead of the updated version. The solution is to delete all files that have been downloaded by the "flood" torrent mechanism
 
-Delete all files that have been downloaded by the "flood" torrent mechanism
+Let's say I have 16 hosts in my cluster
 
+```bash
 for i in {1..16};do ssh -o StrictHostKeyChecking=no ubuntu@10.10.30.$i sudo rm -rf /opt/cloudera/parcels/.flood/; done
 for i in {1..16};do ssh -o StrictHostKeyChecking=no ubuntu@10.10.30.$i sudo rm -rf /opt/cloudera/parcel-cache; done
+for i in {1..16};do ssh -o StrictHostKeyChecking=no ubuntu@10.10.30.$i sudo service cloudera-scm-agent start; done
+```
 
-for i in {201..203};do ssh -o StrictHostKeyChecking=no ubuntu@10.10.30.$i sudo rm -rf /opt/cloudera/parcels/.flood/; done
-for i in {201..203};do ssh -o StrictHostKeyChecking=no ubuntu@10.10.30.$i sudo rm -rf /opt/cloudera/parcel-cache; done
- 
 The goal here is to clear out files that appear to be causing trouble for the download.  When we start the agent, it should detect it needs to start the download again.

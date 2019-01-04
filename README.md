@@ -40,7 +40,7 @@ sh build.sh csd
 
 Copy the Airflow parcel and checksum file to the Cloudera Manager Local Parcel Repository Path.
 By default, the path is `/opt/cloudera/parcel-repo.`
-To verify the path to use, click `Administration > Settings`. In the navigation panel, select the Parcels category. Place the StreamSets parcel file in the path configured for Local Parcel Repository Path.
+To verify the path to use, click `Administration > Settings`. In the navigation panel, select the Parcels category. Place the Airflow parcel file in the path configured for Local Parcel Repository Path.
 
 ```bash
 
@@ -57,7 +57,7 @@ sudo service cloudera-scm-server restart
 
 ```
 
-### Distribute and Activate the StreamSets Parcel
+### Distribute and Activate the Airflow Parcel
 
 After you add the Airflow repository to Cloudera Manager, you can download, distribute, and activate the Airflow parcel across the cluster.
 
@@ -72,5 +72,3 @@ To activate the Airflow parcel, click Activate.
 
 
 More Information about installing custom services can be found at [here](https://www.cloudera.com/documentation/enterprise/latest/topics/cm_mc_addon_services.html#concept_kpt_spj_bn__section_upv_nqj_bn).
-
-

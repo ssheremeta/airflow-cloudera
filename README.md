@@ -7,7 +7,7 @@ All necessary python packeges (airflow, celery, flower, flask) are installed ins
 
 There are used Anaconda3 v5.1.0 and Airflow v1.10.1
 
-This has been tested on CDH 5.14.0.
+This has been tested on Ubuntu 16.04.5 LTS/CDH 5.14.0.
 
 ## Prerequisites
 
@@ -16,6 +16,7 @@ This has been tested on CDH 5.14.0.
 sudo apt install maven
 sudo apt-get install libmysqlclient-dev
 sudo apt-get install libkrb5-dev
+sudo apt-get install libsasl2-dev
 ```
 
 ## Build
